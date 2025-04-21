@@ -1,0 +1,432 @@
+{
+  "accessors": [
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 13534,
+      "max": [
+        8.232892036437988,
+        11.032157897949219,
+        9.804337501525879
+      ],
+      "min": [
+        0.9540131092071533,
+        -0.43907809257507324,
+        -9.614171028137207
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 162408,
+      "componentType": 5126,
+      "count": 13534,
+      "max": [
+        0.99994295835495,
+        0.9992810487747192,
+        0.9993907809257507
+      ],
+      "min": [
+        -0.9999946355819702,
+        -0.9999955892562866,
+        -0.999828577041626
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 13534,
+      "max": [
+        0.0,
+        0.0
+      ],
+      "min": [
+        0.0,
+        0.0
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 108272,
+      "componentType": 5126,
+      "count": 13534,
+      "max": [
+        0.9980469942092896,
+        0.9980469942092896
+      ],
+      "min": [
+        0.0019529999699443579,
+        0.07520198822021484
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "componentType": 5125,
+      "count": 75054,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 324816,
+      "componentType": 5126,
+      "count": 13534,
+      "max": [
+        -0.9540131092071533,
+        11.032157897949219,
+        9.804337501525879
+      ],
+      "min": [
+        -8.232892036437988,
+        -0.43907809257507324,
+        -9.614171028137207
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 487224,
+      "componentType": 5126,
+      "count": 13534,
+      "max": [
+        0.9999946355819702,
+        0.9992810487747192,
+        0.9993907809257507
+      ],
+      "min": [
+        -0.99994295835495,
+        -0.9999955892562866,
+        -0.999828577041626
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 216544,
+      "componentType": 5126,
+      "count": 13534,
+      "max": [
+        0.9980469942092896,
+        0.9980469942092896
+      ],
+      "min": [
+        0.0019529999699443579,
+        0.07520198822021484
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 324816,
+      "componentType": 5126,
+      "count": 13534,
+      "max": [
+        0.0,
+        0.0
+      ],
+      "min": [
+        0.0,
+        0.0
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 300216,
+      "componentType": 5125,
+      "count": 75054,
+      "type": "SCALAR"
+    }
+  ],
+  "asset": {
+    "extras": {
+      "author": "SRUSH651 2th☑ (https://sketchfab.com/THE-OFFICIAL-SRUSH651)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/air-jordan-1-retro-high-union-la-storm-blue-83cd736674e04e7a848677a19fa5ffc2",
+      "title": "AIR JORDAN 1 RETRO HIGH UNION LA storm blue"
+    },
+    "generator": "Sketchfab-16.56.0",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 600432,
+      "name": "floatBufferViews",
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 433088,
+      "byteOffset": 600432,
+      "byteStride": 8,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 649632,
+      "byteOffset": 1033520,
+      "byteStride": 12,
+      "name": "floatBufferViews",
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 1683152,
+      "uri": "scene.bin"
+    }
+  ],
+  "images": [
+    {
+      "uri": "textures/lambert1_baseColor.jpeg"
+    }
+  ],
+  "materials": [
+    {
+      "doubleSided": true,
+      "emissiveFactor": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emissiveTexture": {
+        "index": 0,
+        "texCoord": 1
+      },
+      "name": "lambert1",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        }
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "Union_LA_X_Nike_Air_jordan_1_Retro_High_OG_NRG2_lambert1_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 0,
+            "TEXCOORD_0": 2,
+            "TEXCOORD_1": 3
+          },
+          "indices": 4,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "Union_LA_X_Nike_Air_jordan_1_Retro_High_OG_NRG3_lambert1_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 6,
+            "POSITION": 5,
+            "TEXCOORD_0": 7,
+            "TEXCOORD_1": 8
+          },
+          "indices": 9,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.220446049250313e-16,
+        -1.0,
+        0.0,
+        0.0,
+        1.0,
+        2.220446049250313e-16,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Sketchfab_model"
+    },
+    {
+      "children": [
+        2
+      ],
+      "matrix": [
+        0.009999999776482582,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.2204459996194763e-18,
+        0.009999999776482582,
+        0.0,
+        0.0,
+        -0.009999999776482582,
+        2.2204459996194763e-18,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "USDRoot"
+    },
+    {
+      "children": [
+        3
+      ],
+      "name": "scene"
+    },
+    {
+      "children": [
+        4
+      ],
+      "matrix": [
+        100.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        100.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        100.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Meshes"
+    },
+    {
+      "children": [
+        5
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.220446049250313e-16,
+        -1.0,
+        0.0,
+        0.0,
+        1.0,
+        2.220446049250313e-16,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Sketchfab_model"
+    },
+    {
+      "children": [
+        6
+      ],
+      "matrix": [
+        0.009999999776482582,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.009999999776482582,
+        0.0,
+        0.0,
+        -0.009999999776482582,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "c8fff27caf154002abd81292ae36df3c_fbx"
+    },
+    {
+      "children": [
+        7,
+        10
+      ],
+      "name": "RootNode"
+    },
+    {
+      "children": [
+        8
+      ],
+      "name": "Union_LA_X_Nike_Air_jordan_1_Retro_High_OG_NRG2"
+    },
+    {
+      "children": [
+        9
+      ],
+      "name": "Union_LA_X_Nike_Air_jordan_1_Retro_High_OG_NRG2_lambert1_0"
+    },
+    {
+      "mesh": 0,
+      "name": "Union_LA_X_Nike_Air_jordan_1_Retro_High_OG_NRG2_lambert1_0"
+    },
+    {
+      "children": [
+        11
+      ],
+      "name": "Union_LA_X_Nike_Air_jordan_1_Retro_High_OG_NRG3"
+    },
+    {
+      "children": [
+        12
+      ],
+      "name": "Union_LA_X_Nike_Air_jordan_1_Retro_High_OG_NRG3_lambert1_0"
+    },
+    {
+      "mesh": 1,
+      "name": "Union_LA_X_Nike_Air_jordan_1_Retro_High_OG_NRG3_lambert1_0"
+    }
+  ],
+  "samplers": [
+    {
+      "magFilter": 9729,
+      "minFilter": 9987,
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Sketchfab_Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "source": 0
+    }
+  ]
+}

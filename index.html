@@ -32,6 +32,9 @@
         <a-asset-item id="travis" src="jordan1/travis_scott/scene.gltf"></a-asset-item>
 
         <img id="Logo" src="icons/Logo.png" />
+        <img id="michael" src="poster/michael.png" />
+        <img id="shoes" src="poster/shoes.png" />
+
 
         <!-- Images for controls -->
         <img id="sideImg" src="icons/side.png" />
@@ -39,6 +42,7 @@
         <img id="backImg" src="icons/back.png" />
         <img id="prevImg" src="icons/prev.png" />
         <img id="nextImg" src="icons/next.png" />
+        <img id="closeImg" src="icons/close.png" />
       </a-assets>
 
       <a-entity id="shoe" position="-8 -1 -50">
@@ -93,6 +97,19 @@
         ></a-image>
 
         <!-- Model navigation images -->
+
+        <a-image
+          id="closeZoom"
+          class="clickable"
+          src="#closeImg"
+          position="13 6 5"
+          width="0.7"
+          height="0.7"
+          animation__mouseenter="property: scale; to: 1.1 1.1 1.1; dur: 200; startEvents: mouseenter"
+          animation__mouseleave="property: scale; to: 1 1 1; dur: 200; startEvents: mouseleave"
+        ></a-image>
+
+
         <a-image
           id="prevModel"
           class="clickable"
@@ -128,6 +145,71 @@
           ></a-entity>
         </a-entity>
       </a-entity>
+
+      <a-plane 
+        id="rightViewPlane"
+        class="clickable"
+        color="#CCC" 
+        height="5" 
+        width="3" 
+        position="5 2 -15" 
+        rotation="0 -90 0"
+      >
+      <a-image
+          src="#michael"
+          position=" 0 0.2 0.1"
+          width="7"
+          height="5"
+        ></a-image>
+
+        <a-image
+          id="closeMichael"
+          class="clickable"
+          src="#closeImg"
+          position="0 -3 0.2"
+          width="0.5"
+          height="0.5"
+          
+        ></a-image>
+
+        
+    </a-plane>
+
+
+
+    <a-plane 
+    id="leftViewPlane"
+    class="clickable"
+    color="#CCC" 
+    height="5" 
+    width="3" 
+    position="-5 2 -15" 
+    rotation="0 90 0"
+  >
+  <a-image
+      src="#shoes""
+      position=" 0 0.3 0.1"
+      width="6"
+      height="4"
+    ></a-image>
+
+    <a-image
+      id="closeShoes"
+      class="clickable"
+      src="#closeImg"
+      position="0 -3 0.2"
+      width="0.5"
+      height="0.5"
+      
+    ></a-image>
+
+    
+</a-plane>
+
+
+
+
+
 
       <!-- Camera -->
       <a-camera id="mainCamera" position="0 1.6 0" look-controls="enabled: false" wasd-controls="enabled: false">
@@ -171,7 +253,20 @@
       const rotationSpeed = 0.5;
       let isZoomed = false;
       const originalCameraPosition = { x: 0, y: 1.6, z: 0 };
-      const zoomedCameraPosition = { x: 0, y: 1.6, z: -25 }; // Adjust z value for desired zoom level
+      const zoomedCameraPosition = { x: 0, y: 1.6, z: -30 }; // Adjust z value for desired zoom level
+      
+      // New camera positions for right view
+      const rightViewCameraPosition = { x: 0, y: 1.6, z: -15 };
+      const rightViewCameraRotation = { x: 0, y: -90, z: 0 };
+
+
+
+      const leftViewCameraPosition = { x: 0, y: 1.6, z: -15 };
+      const leftViewCameraRotation = { x: 0, y: 90, z: 0 };
+      
+      // Track if we're in right view mode
+      let isRightView = false;
+      let isLeftView = false;
 
       function rotateModel(targetRotation) {
         const model = document.querySelector('#shoeModel');
@@ -201,27 +296,91 @@
         setModel(currentModelIndex);
       }
 
-      function toggleZoom() {
+      function zoomIn() {
         const camera = document.querySelector('#mainCamera');
-        if (isZoomed) {
-          // Zoom out
-          camera.setAttribute('animation', {
-            property: 'position',
-            to: `${originalCameraPosition.x} ${originalCameraPosition.y} ${originalCameraPosition.z}`,
-            dur: 500,
-            easing: 'easeInOutQuad'
-          });
-        } else {
-          // Zoom in
-          camera.setAttribute('animation', {
-            property: 'position',
-            to: `${zoomedCameraPosition.x} ${zoomedCameraPosition.y} ${zoomedCameraPosition.z}`,
-            dur: 500,
-            easing: 'easeInOutQuad'
-          });
-        }
-        isZoomed = !isZoomed;
+        camera.setAttribute('animation', {
+          property: 'position',
+          to: `${zoomedCameraPosition.x} ${zoomedCameraPosition.y} ${zoomedCameraPosition.z}`,
+          dur: 500,
+          easing: 'easeInOutQuad'
+        });
+        isZoomed = true;
+        isRightView = false;
+        isLeftView = false;  // Reset right view flag when zooming in
       }
+
+      function zoomOut() {
+        const camera = document.querySelector('#mainCamera');
+        camera.setAttribute('animation', {
+          property: 'position',
+          to: `${originalCameraPosition.x} ${originalCameraPosition.y} ${originalCameraPosition.z}`,
+          dur: 500,
+          easing: 'easeInOutQuad'
+        });
+        
+        // Reset camera rotation when zooming out
+        camera.setAttribute('animation__rotation', {
+          property: 'rotation',
+          to: '0 0 0',
+          dur: 500,
+          easing: 'easeInOutQuad'
+        });
+        
+        isZoomed = false;
+        isRightView = false;
+        isLeftView = false; // Reset right view flag when zooming out
+      }
+      
+      function toggleRightView() {
+        const camera = document.querySelector('#mainCamera');
+        
+        
+          // Move to right view
+          camera.setAttribute('animation', {
+            property: 'position',
+            to: `${rightViewCameraPosition.x} ${rightViewCameraPosition.y} ${rightViewCameraPosition.z}`,
+            dur: 800,
+            easing: 'easeInOutQuad'
+          });
+          
+          camera.setAttribute('animation__rotation', {
+            property: 'rotation',
+            to: `${rightViewCameraRotation.x} ${rightViewCameraRotation.y} ${rightViewCameraRotation.z}`,
+            dur: 800,
+            easing: 'easeInOutQuad'
+          });
+          
+          isRightView = true;
+          isZoomed = true;
+          
+    
+      }
+
+      function toggleLeftView() {
+        const camera = document.querySelector('#mainCamera');
+        
+        
+          // Move to right view
+          camera.setAttribute('animation', {
+            property: 'position',
+            to: `${leftViewCameraPosition.x} ${leftViewCameraPosition.y} ${leftViewCameraPosition.z}`,
+            dur: 800,
+            easing: 'easeInOutQuad'
+          });
+          
+          camera.setAttribute('animation__rotation', {
+            property: 'rotation',
+            to: `${leftViewCameraRotation.x} ${leftViewCameraRotation.y} ${leftViewCameraRotation.z}`,
+            dur: 800,
+            easing: 'easeInOutQuad'
+          });
+          
+          isLeftView = true;
+          isZoomed = true;
+          
+    
+      }
+
 
       // Get position from either mouse or touch event
       function getPosition(event) {
@@ -297,10 +456,47 @@
         document.getElementById('nextModel').addEventListener('click', nextModel);
         document.getElementById('prevModel').addEventListener('click', prevModel);
 
-        // Add click listener for shoe model zoom
+        // Modified zoom functionality
         document.getElementById('shoeModel').addEventListener('click', function() {
-          toggleZoom();
+          if (!isZoomed) {
+            zoomIn();
+          }
         });
+
+        document.getElementById('closeZoom' ).addEventListener('click', function() {
+          if (isZoomed) {
+            zoomOut();
+          }
+        });
+
+    
+        
+        // Add click event for the plane to toggle right view
+        document.getElementById('rightViewPlane').addEventListener('click', function() {
+          toggleRightView();
+        });
+
+        document.getElementById('leftViewPlane').addEventListener('click', function() {
+          toggleLeftView();
+        });
+
+
+        document.getElementById('closeMichael').addEventListener('click', function(e) {
+  e.stopPropagation(); // Prevent triggering the plane's click event
+  if (isRightView) {
+    zoomOut();
+  }
+});
+
+document.getElementById('closeShoes').addEventListener('click', function(e) {
+  e.stopPropagation(); // Prevent triggering the plane's click event
+  if (isLeftView) {
+    zoomOut();
+  }
+});
+
+
+        
 
         // Mouse event listeners for desktop
         const scene = document.querySelector('a-scene');

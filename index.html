@@ -7,9 +7,54 @@
     <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
     <script src="https://unpkg.com/aframe-event-set-component@5.x.x/dist/aframe-event-set-component.min.js"></script>
     <script src="https://unpkg.com/aframe-animation-component@5.x.x/dist/aframe-animation-component.min.js"></script>
-
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        touch-action: none;
+      }
+      a-scene {
+        width: 100%;
+        height: 100%;
+      }
+      #permission-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.8);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        color: white;
+        font-family: Arial, sans-serif;
+        text-align: center;
+      }
+      #permission-overlay button {
+        padding: 10px 20px;
+        font-size: 16px;
+        margin-top: 20px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+    </style>
   </head>
   <body>
+    <div id="permission-overlay" style="display: none;">
+      <h2>Device Motion Permission Required</h2>
+      <p>This experience uses device motion for interactive controls. Please grant permission when prompted.</p>
+      <button id="request-permission">Request Permission</button>
+    </div>
+
     <a-scene>
       <a-assets>
         <!-- Models -->
@@ -21,7 +66,6 @@
         <img id="Logo" src="icons/Logo.png" />
         <img id="michael" src="poster/michael.png" />
         <img id="shoes" src="poster/shoes.png" />
-
 
         <!-- Images for controls -->
         <img id="sideImg" src="icons/side.png" />
@@ -84,7 +128,6 @@
         ></a-image>
 
         <!-- Model navigation images -->
-
         <a-image
           id="closeZoom"
           class="clickable"
@@ -95,7 +138,6 @@
           animation__mouseenter="property: scale; to: 1.1 1.1 1.1; dur: 200; startEvents: mouseenter"
           animation__mouseleave="property: scale; to: 1 1 1; dur: 200; startEvents: mouseleave"
         ></a-image>
-
 
         <a-image
           id="prevModel"
@@ -142,7 +184,7 @@
         position="5 2 -15" 
         rotation="0 -90 0"
       >
-      <a-image
+        <a-image
           src="#michael"
           position=" 0 0.2 0.1"
           width="7"
@@ -156,47 +198,34 @@
           position="0 -3 0.2"
           width="0.5"
           height="0.5"
-          
+        ></a-image>
+      </a-plane>
+
+      <a-plane 
+        id="leftViewPlane"
+        class="clickable"
+        color="#CCC" 
+        height="5" 
+        width="3" 
+        position="-5 2 -15" 
+        rotation="0 90 0"
+      >
+        <a-image
+          src="#shoes"
+          position=" 0 0.3 0.1"
+          width="6"
+          height="4"
         ></a-image>
 
-        
-    </a-plane>
-
-
-
-    <a-plane 
-    id="leftViewPlane"
-    class="clickable"
-    color="#CCC" 
-    height="5" 
-    width="3" 
-    position="-5 2 -15" 
-    rotation="0 90 0"
-  >
-  <a-image
-      src="#shoes""
-      position=" 0 0.3 0.1"
-      width="6"
-      height="4"
-    ></a-image>
-
-    <a-image
-      id="closeShoes"
-      class="clickable"
-      src="#closeImg"
-      position="0 -3 0.2"
-      width="0.5"
-      height="0.5"
-      
-    ></a-image>
-
-    
-</a-plane>
-
-
-
-
-
+        <a-image
+          id="closeShoes"
+          class="clickable"
+          src="#closeImg"
+          position="0 -3 0.2"
+          width="0.5"
+          height="0.5"
+        ></a-image>
+      </a-plane>
 
       <!-- Camera -->
       <a-camera id="mainCamera" position="0 1.6 0" look-controls="enabled: false" wasd-controls="enabled: false">
@@ -240,13 +269,11 @@
       const rotationSpeed = 0.5;
       let isZoomed = false;
       const originalCameraPosition = { x: 0, y: 1.6, z: 0 };
-      const zoomedCameraPosition = { x: 0, y: 1.6, z: -30 }; // Adjust z value for desired zoom level
+      const zoomedCameraPosition = { x: 0, y: 1.6, z: -30 };
       
       // New camera positions for right view
       const rightViewCameraPosition = { x: 0, y: 1.6, z: -15 };
       const rightViewCameraRotation = { x: 0, y: -90, z: 0 };
-
-
 
       const leftViewCameraPosition = { x: 0, y: 1.6, z: -15 };
       const leftViewCameraRotation = { x: 0, y: 90, z: 0 };
@@ -254,6 +281,36 @@
       // Track if we're in right view mode
       let isRightView = false;
       let isLeftView = false;
+
+      // Check for device motion permission
+      function checkDeviceMotionPermission() {
+        if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+          // iOS 13+ requires permission for device motion
+          document.getElementById('permission-overlay').style.display = 'flex';
+        } else {
+          // Other devices don't need permission
+          initializeScene();
+        }
+      }
+
+      function requestDeviceMotionPermission() {
+        if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+          DeviceMotionEvent.requestPermission()
+            .then(response => {
+              if (response === 'granted') {
+                document.getElementById('permission-overlay').style.display = 'none';
+                initializeScene();
+              } else {
+                alert('Permission was denied. Some features may not work properly.');
+                document.getElementById('permission-overlay').style.display = 'none';
+                initializeScene();
+              }
+            })
+            .catch(console.error);
+        } else {
+          initializeScene();
+        }
+      }
 
       function rotateModel(targetRotation) {
         const model = document.querySelector('#shoeModel');
@@ -293,7 +350,7 @@
         });
         isZoomed = true;
         isRightView = false;
-        isLeftView = false;  // Reset right view flag when zooming in
+        isLeftView = false;
       }
 
       function zoomOut() {
@@ -305,7 +362,6 @@
           easing: 'easeInOutQuad'
         });
         
-        // Reset camera rotation when zooming out
         camera.setAttribute('animation__rotation', {
           property: 'rotation',
           to: '0 0 0',
@@ -315,61 +371,51 @@
         
         isZoomed = false;
         isRightView = false;
-        isLeftView = false; // Reset right view flag when zooming out
+        isLeftView = false;
       }
       
       function toggleRightView() {
         const camera = document.querySelector('#mainCamera');
         
+        camera.setAttribute('animation', {
+          property: 'position',
+          to: `${rightViewCameraPosition.x} ${rightViewCameraPosition.y} ${rightViewCameraPosition.z}`,
+          dur: 800,
+          easing: 'easeInOutQuad'
+        });
         
-          // Move to right view
-          camera.setAttribute('animation', {
-            property: 'position',
-            to: `${rightViewCameraPosition.x} ${rightViewCameraPosition.y} ${rightViewCameraPosition.z}`,
-            dur: 800,
-            easing: 'easeInOutQuad'
-          });
-          
-          camera.setAttribute('animation__rotation', {
-            property: 'rotation',
-            to: `${rightViewCameraRotation.x} ${rightViewCameraRotation.y} ${rightViewCameraRotation.z}`,
-            dur: 800,
-            easing: 'easeInOutQuad'
-          });
-          
-          isRightView = true;
-          isZoomed = true;
-          
-    
+        camera.setAttribute('animation__rotation', {
+          property: 'rotation',
+          to: `${rightViewCameraRotation.x} ${rightViewCameraRotation.y} ${rightViewCameraRotation.z}`,
+          dur: 800,
+          easing: 'easeInOutQuad'
+        });
+        
+        isRightView = true;
+        isZoomed = true;
       }
 
       function toggleLeftView() {
         const camera = document.querySelector('#mainCamera');
         
+        camera.setAttribute('animation', {
+          property: 'position',
+          to: `${leftViewCameraPosition.x} ${leftViewCameraPosition.y} ${leftViewCameraPosition.z}`,
+          dur: 800,
+          easing: 'easeInOutQuad'
+        });
         
-          // Move to right view
-          camera.setAttribute('animation', {
-            property: 'position',
-            to: `${leftViewCameraPosition.x} ${leftViewCameraPosition.y} ${leftViewCameraPosition.z}`,
-            dur: 800,
-            easing: 'easeInOutQuad'
-          });
-          
-          camera.setAttribute('animation__rotation', {
-            property: 'rotation',
-            to: `${leftViewCameraRotation.x} ${leftViewCameraRotation.y} ${leftViewCameraRotation.z}`,
-            dur: 800,
-            easing: 'easeInOutQuad'
-          });
-          
-          isLeftView = true;
-          isZoomed = true;
-          
-    
+        camera.setAttribute('animation__rotation', {
+          property: 'rotation',
+          to: `${leftViewCameraRotation.x} ${leftViewCameraRotation.y} ${leftViewCameraRotation.z}`,
+          dur: 800,
+          easing: 'easeInOutQuad'
+        });
+        
+        isLeftView = true;
+        isZoomed = true;
       }
 
-
-      // Get position from either mouse or touch event
       function getPosition(event) {
         if (event.touches) {
           return {
@@ -384,11 +430,9 @@
         }
       }
 
-      // Common start function for both mouse and touch
       function onStart(event) {
         if (event.target.classList.contains('clickable')) {
           if (event.target.id === 'shoeModel') {
-            // Don't start rotating if clicking the shoe model (we want zoom instead)
             return;
           }
           return;
@@ -398,7 +442,6 @@
         event.preventDefault();
       }
 
-      // Common move function for both mouse and touch
       function onMove(event) {
         if (!isRotating) return;
         
@@ -417,12 +460,11 @@
         event.preventDefault();
       }
 
-      // Common end function for both mouse and touch
       function onEnd() {
         isRotating = false;
       }
 
-      document.addEventListener('DOMContentLoaded', function () {
+      function initializeScene() {
         // Original event listeners
         document.getElementById('sideView').addEventListener('click', function () {
           rotateModel(modelRotations.side);
@@ -443,22 +485,18 @@
         document.getElementById('nextModel').addEventListener('click', nextModel);
         document.getElementById('prevModel').addEventListener('click', prevModel);
 
-        // Modified zoom functionality
         document.getElementById('shoeModel').addEventListener('click', function() {
           if (!isZoomed) {
             zoomIn();
           }
         });
 
-        document.getElementById('closeZoom' ).addEventListener('click', function() {
+        document.getElementById('closeZoom').addEventListener('click', function() {
           if (isZoomed) {
             zoomOut();
           }
         });
-
-    
         
-        // Add click event for the plane to toggle right view
         document.getElementById('rightViewPlane').addEventListener('click', function() {
           toggleRightView();
         });
@@ -467,23 +505,19 @@
           toggleLeftView();
         });
 
-
         document.getElementById('closeMichael').addEventListener('click', function(e) {
-  e.stopPropagation(); // Prevent triggering the plane's click event
-  if (isRightView) {
-    zoomOut();
-  }
-});
+          e.stopPropagation();
+          if (isRightView) {
+            zoomOut();
+          }
+        });
 
-document.getElementById('closeShoes').addEventListener('click', function(e) {
-  e.stopPropagation(); // Prevent triggering the plane's click event
-  if (isLeftView) {
-    zoomOut();
-  }
-});
-
-
-        
+        document.getElementById('closeShoes').addEventListener('click', function(e) {
+          e.stopPropagation();
+          if (isLeftView) {
+            zoomOut();
+          }
+        });
 
         // Mouse event listeners for desktop
         const scene = document.querySelector('a-scene');
@@ -504,6 +538,12 @@ document.getElementById('closeShoes').addEventListener('click', function(e) {
             event.preventDefault();
           }
         }, { passive: false });
+      }
+
+      // Initialize the permission check
+      document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('request-permission').addEventListener('click', requestDeviceMotionPermission);
+        checkDeviceMotionPermission();
       });
     </script>
   </body>

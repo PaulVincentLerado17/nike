@@ -7,54 +7,29 @@
     <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
     <script src="https://unpkg.com/aframe-event-set-component@5.x.x/dist/aframe-event-set-component.min.js"></script>
     <script src="https://unpkg.com/aframe-animation-component@5.x.x/dist/aframe-animation-component.min.js"></script>
-    <style>
-      html, body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        touch-action: none;
-      }
-      a-scene {
-        width: 100%;
-        height: 100%;
-      }
-      #loadingScreen {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        background: #000;
-        z-index: 9999;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: white;
-        font-family: Arial, sans-serif;
-      }
-    </style>
+
   </head>
   <body>
-    <div id="loadingScreen">Loading...</div>
-    
     <a-scene>
       <a-assets>
-        <!-- Load only essential assets initially -->
+        <!-- Models -->
         <a-asset-item id="offWhiteChicago" src="jordan1/off_white_chicago/scene.gltf"></a-asset-item>
+        <a-asset-item id="offWhiteUnc" src="jordan1/off_white_unc/scene.gltf"></a-asset-item>
+        <a-asset-item id="retro" src="jordan1/retro_high_union_la_storm_blue/scene.gltf"></a-asset-item>
+        <a-asset-item id="travis" src="jordan1/travis_scott/scene.gltf"></a-asset-item>
+
         <img id="Logo" src="icons/Logo.png" />
+        <img id="michael" src="poster/michael.png" />
+        <img id="shoes" src="poster/shoes.png" />
+
+
+        <!-- Images for controls -->
         <img id="sideImg" src="icons/side.png" />
         <img id="frontImg" src="icons/front.png" />
         <img id="backImg" src="icons/back.png" />
         <img id="prevImg" src="icons/prev.png" />
         <img id="nextImg" src="icons/next.png" />
         <img id="closeImg" src="icons/close.png" />
-
-        <!-- Defer loading of other assets -->
-        <a-asset-item id="offWhiteUnc" src="jordan1/off_white_unc/scene.gltf" preload="false"></a-asset-item>
-        <a-asset-item id="retro" src="jordan1/retro_high_union_la_storm_blue/scene.gltf" preload="false"></a-asset-item>
-        <a-asset-item id="travis" src="jordan1/travis_scott/scene.gltf" preload="false"></a-asset-item>
-        <img id="michael" src="poster/michael.png" preload="false" />
-        <img id="shoes" src="poster/shoes.png" preload="false" />
       </a-assets>
 
       <a-entity id="shoe" position="-8 -1 -50">
@@ -109,6 +84,7 @@
         ></a-image>
 
         <!-- Model navigation images -->
+
         <a-image
           id="closeZoom"
           class="clickable"
@@ -119,6 +95,7 @@
           animation__mouseenter="property: scale; to: 1.1 1.1 1.1; dur: 200; startEvents: mouseenter"
           animation__mouseleave="property: scale; to: 1 1 1; dur: 200; startEvents: mouseleave"
         ></a-image>
+
 
         <a-image
           id="prevModel"
@@ -164,10 +141,9 @@
         width="3" 
         position="5 2 -15" 
         rotation="0 -90 0"
-        visible="false"
       >
-        <a-image
-          id="michaelImage"
+      <a-image
+          src="#michael"
           position=" 0 0.2 0.1"
           width="7"
           height="5"
@@ -180,41 +156,52 @@
           position="0 -3 0.2"
           width="0.5"
           height="0.5"
-        ></a-image>
-      </a-plane>
-
-      <a-plane 
-        id="leftViewPlane"
-        class="clickable"
-        color="#CCC" 
-        height="5" 
-        width="3" 
-        position="-5 2 -15" 
-        rotation="0 90 0"
-        visible="false"
-      >
-        <a-image
-          id="shoesImage"
-          position=" 0 0.3 0.1"
-          width="6"
-          height="4"
+          
         ></a-image>
 
-        <a-image
-          id="closeShoes"
-          class="clickable"
-          src="#closeImg"
-          position="0 -3 0.2"
-          width="0.5"
-          height="0.5"
-        ></a-image>
-      </a-plane>
+        
+    </a-plane>
+
+
+
+    <a-plane 
+    id="leftViewPlane"
+    class="clickable"
+    color="#CCC" 
+    height="5" 
+    width="3" 
+    position="-5 2 -15" 
+    rotation="0 90 0"
+  >
+  <a-image
+      src="#shoes""
+      position=" 0 0.3 0.1"
+      width="6"
+      height="4"
+    ></a-image>
+
+    <a-image
+      id="closeShoes"
+      class="clickable"
+      src="#closeImg"
+      position="0 -3 0.2"
+      width="0.5"
+      height="0.5"
+      
+    ></a-image>
+
+    
+</a-plane>
+
+
+
+
+
 
       <!-- Camera -->
       <a-camera id="mainCamera" position="0 1.6 0" look-controls="enabled: false" wasd-controls="enabled: false">
         <a-cursor material="color: #FFFFFF; opacity: 0.5; transparent: true"></a-cursor>
       </a-camera>
-    </a-scene>
 
     <script>
       const modelRotations = {
@@ -253,14 +240,18 @@
       const rotationSpeed = 0.5;
       let isZoomed = false;
       const originalCameraPosition = { x: 0, y: 1.6, z: 0 };
-      const zoomedCameraPosition = { x: 0, y: 1.6, z: -30 };
+      const zoomedCameraPosition = { x: 0, y: 1.6, z: -30 }; // Adjust z value for desired zoom level
       
+      // New camera positions for right view
       const rightViewCameraPosition = { x: 0, y: 1.6, z: -15 };
       const rightViewCameraRotation = { x: 0, y: -90, z: 0 };
+
+
 
       const leftViewCameraPosition = { x: 0, y: 1.6, z: -15 };
       const leftViewCameraRotation = { x: 0, y: 90, z: 0 };
       
+      // Track if we're in right view mode
       let isRightView = false;
       let isLeftView = false;
 
@@ -285,29 +276,11 @@
       function nextModel() {
         currentModelIndex = (currentModelIndex + 1) % modelData.length;
         setModel(currentModelIndex);
-        
-        // Lazy load next model if not loaded
-        if (currentModelIndex + 1 < modelData.length) {
-          const nextModelId = modelData[currentModelIndex + 1].id.replace('#', '');
-          const asset = document.querySelector(`#${nextModelId}`);
-          if (asset && asset.hasAttribute('preload') && asset.getAttribute('preload') === 'false') {
-            asset.setAttribute('preload', 'true');
-          }
-        }
       }
 
       function prevModel() {
         currentModelIndex = (currentModelIndex - 1 + modelData.length) % modelData.length;
         setModel(currentModelIndex);
-        
-        // Lazy load previous model if not loaded
-        if (currentModelIndex - 1 >= 0) {
-          const prevModelId = modelData[currentModelIndex - 1].id.replace('#', '');
-          const asset = document.querySelector(`#${prevModelId}`);
-          if (asset && asset.hasAttribute('preload') && asset.getAttribute('preload') === 'false') {
-            asset.setAttribute('preload', 'true');
-          }
-        }
       }
 
       function zoomIn() {
@@ -320,7 +293,7 @@
         });
         isZoomed = true;
         isRightView = false;
-        isLeftView = false;
+        isLeftView = false;  // Reset right view flag when zooming in
       }
 
       function zoomOut() {
@@ -332,6 +305,7 @@
           easing: 'easeInOutQuad'
         });
         
+        // Reset camera rotation when zooming out
         camera.setAttribute('animation__rotation', {
           property: 'rotation',
           to: '0 0 0',
@@ -341,67 +315,61 @@
         
         isZoomed = false;
         isRightView = false;
-        isLeftView = false;
+        isLeftView = false; // Reset right view flag when zooming out
       }
       
       function toggleRightView() {
-        // Load the image if not already loaded
-        const michaelImage = document.querySelector('#michaelImage');
-        if (!michaelImage.getAttribute('src')) {
-          michaelImage.setAttribute('src', '#michael');
-        }
-        
-        const rightViewPlane = document.querySelector('#rightViewPlane');
-        rightViewPlane.setAttribute('visible', 'true');
-        
         const camera = document.querySelector('#mainCamera');
-        camera.setAttribute('animation', {
-          property: 'position',
-          to: `${rightViewCameraPosition.x} ${rightViewCameraPosition.y} ${rightViewCameraPosition.z}`,
-          dur: 800,
-          easing: 'easeInOutQuad'
-        });
         
-        camera.setAttribute('animation__rotation', {
-          property: 'rotation',
-          to: `${rightViewCameraRotation.x} ${rightViewCameraRotation.y} ${rightViewCameraRotation.z}`,
-          dur: 800,
-          easing: 'easeInOutQuad'
-        });
         
-        isRightView = true;
-        isZoomed = true;
+          // Move to right view
+          camera.setAttribute('animation', {
+            property: 'position',
+            to: `${rightViewCameraPosition.x} ${rightViewCameraPosition.y} ${rightViewCameraPosition.z}`,
+            dur: 800,
+            easing: 'easeInOutQuad'
+          });
+          
+          camera.setAttribute('animation__rotation', {
+            property: 'rotation',
+            to: `${rightViewCameraRotation.x} ${rightViewCameraRotation.y} ${rightViewCameraRotation.z}`,
+            dur: 800,
+            easing: 'easeInOutQuad'
+          });
+          
+          isRightView = true;
+          isZoomed = true;
+          
+    
       }
 
       function toggleLeftView() {
-        // Load the image if not already loaded
-        const shoesImage = document.querySelector('#shoesImage');
-        if (!shoesImage.getAttribute('src')) {
-          shoesImage.setAttribute('src', '#shoes');
-        }
-        
-        const leftViewPlane = document.querySelector('#leftViewPlane');
-        leftViewPlane.setAttribute('visible', 'true');
-        
         const camera = document.querySelector('#mainCamera');
-        camera.setAttribute('animation', {
-          property: 'position',
-          to: `${leftViewCameraPosition.x} ${leftViewCameraPosition.y} ${leftViewCameraPosition.z}`,
-          dur: 800,
-          easing: 'easeInOutQuad'
-        });
         
-        camera.setAttribute('animation__rotation', {
-          property: 'rotation',
-          to: `${leftViewCameraRotation.x} ${leftViewCameraRotation.y} ${leftViewCameraRotation.z}`,
-          dur: 800,
-          easing: 'easeInOutQuad'
-        });
         
-        isLeftView = true;
-        isZoomed = true;
+          // Move to right view
+          camera.setAttribute('animation', {
+            property: 'position',
+            to: `${leftViewCameraPosition.x} ${leftViewCameraPosition.y} ${leftViewCameraPosition.z}`,
+            dur: 800,
+            easing: 'easeInOutQuad'
+          });
+          
+          camera.setAttribute('animation__rotation', {
+            property: 'rotation',
+            to: `${leftViewCameraRotation.x} ${leftViewCameraRotation.y} ${leftViewCameraRotation.z}`,
+            dur: 800,
+            easing: 'easeInOutQuad'
+          });
+          
+          isLeftView = true;
+          isZoomed = true;
+          
+    
       }
 
+
+      // Get position from either mouse or touch event
       function getPosition(event) {
         if (event.touches) {
           return {
@@ -416,9 +384,11 @@
         }
       }
 
+      // Common start function for both mouse and touch
       function onStart(event) {
         if (event.target.classList.contains('clickable')) {
           if (event.target.id === 'shoeModel') {
+            // Don't start rotating if clicking the shoe model (we want zoom instead)
             return;
           }
           return;
@@ -428,6 +398,7 @@
         event.preventDefault();
       }
 
+      // Common move function for both mouse and touch
       function onMove(event) {
         if (!isRotating) return;
         
@@ -446,32 +417,12 @@
         event.preventDefault();
       }
 
+      // Common end function for both mouse and touch
       function onEnd() {
         isRotating = false;
       }
 
-      function enableMotionControls() {
-        if (AFRAME.utils.device.checkHeadsetConnected() || AFRAME.utils.device.isMobile()) {
-          const camera = document.querySelector('#mainCamera');
-          camera.setAttribute('look-controls', 'enabled', true);
-        }
-      }
-
       document.addEventListener('DOMContentLoaded', function () {
-        // Hide loading screen when scene is loaded
-        document.querySelector('a-scene').addEventListener('loaded', function() {
-          setTimeout(() => {
-            document.getElementById('loadingScreen').style.display = 'none';
-            
-            // Enable motion controls after everything is loaded
-            setTimeout(enableMotionControls, 1000);
-            
-            // Load deferred assets
-            document.querySelector('#michael').setAttribute('preload', 'true');
-            document.querySelector('#shoes').setAttribute('preload', 'true');
-          }, 500);
-        });
-
         // Original event listeners
         document.getElementById('sideView').addEventListener('click', function () {
           rotateModel(modelRotations.side);
@@ -492,18 +443,22 @@
         document.getElementById('nextModel').addEventListener('click', nextModel);
         document.getElementById('prevModel').addEventListener('click', prevModel);
 
+        // Modified zoom functionality
         document.getElementById('shoeModel').addEventListener('click', function() {
           if (!isZoomed) {
             zoomIn();
           }
         });
 
-        document.getElementById('closeZoom').addEventListener('click', function() {
+        document.getElementById('closeZoom' ).addEventListener('click', function() {
           if (isZoomed) {
             zoomOut();
           }
         });
+
+    
         
+        // Add click event for the plane to toggle right view
         document.getElementById('rightViewPlane').addEventListener('click', function() {
           toggleRightView();
         });
@@ -512,21 +467,23 @@
           toggleLeftView();
         });
 
-        document.getElementById('closeMichael').addEventListener('click', function(e) {
-          e.stopPropagation();
-          document.querySelector('#rightViewPlane').setAttribute('visible', 'false');
-          if (isRightView) {
-            zoomOut();
-          }
-        });
 
-        document.getElementById('closeShoes').addEventListener('click', function(e) {
-          e.stopPropagation();
-          document.querySelector('#leftViewPlane').setAttribute('visible', 'false');
-          if (isLeftView) {
-            zoomOut();
-          }
-        });
+        document.getElementById('closeMichael').addEventListener('click', function(e) {
+  e.stopPropagation(); // Prevent triggering the plane's click event
+  if (isRightView) {
+    zoomOut();
+  }
+});
+
+document.getElementById('closeShoes').addEventListener('click', function(e) {
+  e.stopPropagation(); // Prevent triggering the plane's click event
+  if (isLeftView) {
+    zoomOut();
+  }
+});
+
+
+        
 
         // Mouse event listeners for desktop
         const scene = document.querySelector('a-scene');
@@ -541,6 +498,7 @@
         scene.addEventListener('touchend', onEnd);
         scene.addEventListener('touchcancel', onEnd);
 
+        // Prevent default touch actions
         document.addEventListener('touchmove', function(event) {
           if (isRotating) {
             event.preventDefault();

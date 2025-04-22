@@ -20,7 +20,6 @@
         <a-asset-item id="retro" src="jordan1/retro_high_union_la_storm_blue/scene.gltf"></a-asset-item>
         <a-asset-item id="travis" src="jordan1/travis_scott/scene.gltf"></a-asset-item>
 
-
         <img id="Logo" src="icons/Logo.png" />
 
         <!-- Images for controls -->
@@ -31,26 +30,29 @@
         <img id="nextImg" src="icons/next.png" />
       </a-assets>
 
-      <a-entity position="-8 -1 -20">
+
+      
+ <a-image
+          src="#Logo"
+          position="0 20 -30"
+          width="8"
+          height="5"
+        ></a-image>
+
+
+      <a-entity position="-8 -1 -30">
+       
+
         <a-cylinder
           id="triggerCylinder"
           class="clickable"
           position="8 -2 5"
           radius="4"
           height="0.5"
-          
           color="#808080"
         ></a-cylinder>
 
-
-        <a-image
-          src="#Logo"
-          position="8 10 8"
-          width="4"
-          height="2.5"
-          
       
-        ></a-image>
 
         <!-- View control images -->
         <a-image
@@ -113,6 +115,7 @@
         <a-entity id="model" position="-1 1.5 16">
           <a-entity
             id="shoeModel"
+            class="rotatable"
             cursor="rayOrigin: mouse"
             rotation="0 -40 0"
             gltf-model="#offWhiteChicago"
@@ -123,10 +126,9 @@
       </a-entity>
 
       <!-- Camera -->
-      <a-camera id="mainCamera" position="0 1.6 0">
+      <a-camera id="mainCamera" position="0 1.6 0" look-controls="enabled: false" wasd-controls="enabled: false">
         <a-cursor material="color: #FFFFFF; opacity: 0.5; transparent: true"></a-cursor>
       </a-camera>
-    </a-scene>
 
     <script>
       const modelRotations = {
@@ -160,6 +162,9 @@
       ];
 
       let currentModelIndex = 0;
+      let isRotating = false;
+      let previousMousePosition = { x: 0, y: 0 };
+      const rotationSpeed = 0.5;
 
       function rotateModel(targetRotation) {
         const model = document.querySelector('#shoeModel');
@@ -189,7 +194,41 @@
         setModel(currentModelIndex);
       }
 
+      // Mouse event handlers for free rotation
+      function onMouseDown(event) {
+        if (event.target.classList.contains('clickable')) return;
+        isRotating = true;
+        previousMousePosition = {
+          x: event.clientX,
+          y: event.clientY
+        };
+      }
+
+      function onMouseMove(event) {
+        if (!isRotating) return;
+        
+        const deltaX = event.clientX - previousMousePosition.x;
+        const model = document.querySelector('#shoeModel');
+        const currentRotation = model.getAttribute('rotation');
+        
+        model.setAttribute('rotation', {
+          x: currentRotation.x,
+          y: currentRotation.y + deltaX * rotationSpeed,
+          z: currentRotation.z
+        });
+        
+        previousMousePosition = {
+          x: event.clientX,
+          y: event.clientY
+        };
+      }
+
+      function onMouseUp() {
+        isRotating = false;
+      }
+
       document.addEventListener('DOMContentLoaded', function () {
+        // Original event listeners
         document.getElementById('sideView').addEventListener('click', function () {
           rotateModel(modelRotations.side);
         });
@@ -208,6 +247,13 @@
 
         document.getElementById('nextModel').addEventListener('click', nextModel);
         document.getElementById('prevModel').addEventListener('click', prevModel);
+
+        // Add mouse event listeners for free rotation
+        const scene = document.querySelector('a-scene');
+        scene.addEventListener('mousedown', onMouseDown);
+        scene.addEventListener('mousemove', onMouseMove);
+        scene.addEventListener('mouseup', onMouseUp);
+        scene.addEventListener('mouseleave', onMouseUp);
       });
     </script>
   </body>

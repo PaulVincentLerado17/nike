@@ -2,14 +2,25 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>A-Frame View Controls</title>
     <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
     <script src="https://unpkg.com/aframe-event-set-component@5.x.x/dist/aframe-event-set-component.min.js"></script>
     <script src="https://unpkg.com/aframe-animation-component@5.x.x/dist/aframe-animation-component.min.js"></script>
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        touch-action: none;
+      }
+      a-scene {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
   </head>
   <body>
     <a-scene>
@@ -30,19 +41,7 @@
         <img id="nextImg" src="icons/next.png" />
       </a-assets>
 
-
-      
- <a-image
-          src="#Logo"
-          position="0 20 -30"
-          width="8"
-          height="5"
-        ></a-image>
-
-
-      <a-entity position="-8 -1 -30">
-       
-
+      <a-entity id="shoe" position="-8 -1 -50">
         <a-cylinder
           id="triggerCylinder"
           class="clickable"
@@ -52,7 +51,12 @@
           color="#808080"
         ></a-cylinder>
 
-      
+        <a-image
+          src="#Logo"
+          position="8 11 8"
+          width="3"
+          height="1.5"
+        ></a-image>
 
         <!-- View control images -->
         <a-image
@@ -115,7 +119,7 @@
         <a-entity id="model" position="-1 1.5 16">
           <a-entity
             id="shoeModel"
-            class="rotatable"
+            class="rotatable clickable"
             cursor="rayOrigin: mouse"
             rotation="0 -40 0"
             gltf-model="#offWhiteChicago"
@@ -163,8 +167,11 @@
 
       let currentModelIndex = 0;
       let isRotating = false;
-      let previousMousePosition = { x: 0, y: 0 };
+      let previousPosition = { x: 0, y: 0 };
       const rotationSpeed = 0.5;
+      let isZoomed = false;
+      const originalCameraPosition = { x: 0, y: 1.6, z: 0 };
+      const zoomedCameraPosition = { x: 0, y: 1.6, z: -25 }; // Adjust z value for desired zoom level
 
       function rotateModel(targetRotation) {
         const model = document.querySelector('#shoeModel');
@@ -194,20 +201,63 @@
         setModel(currentModelIndex);
       }
 
-      // Mouse event handlers for free rotation
-      function onMouseDown(event) {
-        if (event.target.classList.contains('clickable')) return;
-        isRotating = true;
-        previousMousePosition = {
-          x: event.clientX,
-          y: event.clientY
-        };
+      function toggleZoom() {
+        const camera = document.querySelector('#mainCamera');
+        if (isZoomed) {
+          // Zoom out
+          camera.setAttribute('animation', {
+            property: 'position',
+            to: `${originalCameraPosition.x} ${originalCameraPosition.y} ${originalCameraPosition.z}`,
+            dur: 500,
+            easing: 'easeInOutQuad'
+          });
+        } else {
+          // Zoom in
+          camera.setAttribute('animation', {
+            property: 'position',
+            to: `${zoomedCameraPosition.x} ${zoomedCameraPosition.y} ${zoomedCameraPosition.z}`,
+            dur: 500,
+            easing: 'easeInOutQuad'
+          });
+        }
+        isZoomed = !isZoomed;
       }
 
-      function onMouseMove(event) {
+      // Get position from either mouse or touch event
+      function getPosition(event) {
+        if (event.touches) {
+          return {
+            x: event.touches[0].clientX,
+            y: event.touches[0].clientY
+          };
+        } else {
+          return {
+            x: event.clientX,
+            y: event.clientY
+          };
+        }
+      }
+
+      // Common start function for both mouse and touch
+      function onStart(event) {
+        if (event.target.classList.contains('clickable')) {
+          if (event.target.id === 'shoeModel') {
+            // Don't start rotating if clicking the shoe model (we want zoom instead)
+            return;
+          }
+          return;
+        }
+        isRotating = true;
+        previousPosition = getPosition(event);
+        event.preventDefault();
+      }
+
+      // Common move function for both mouse and touch
+      function onMove(event) {
         if (!isRotating) return;
         
-        const deltaX = event.clientX - previousMousePosition.x;
+        const currentPosition = getPosition(event);
+        const deltaX = currentPosition.x - previousPosition.x;
         const model = document.querySelector('#shoeModel');
         const currentRotation = model.getAttribute('rotation');
         
@@ -217,13 +267,12 @@
           z: currentRotation.z
         });
         
-        previousMousePosition = {
-          x: event.clientX,
-          y: event.clientY
-        };
+        previousPosition = currentPosition;
+        event.preventDefault();
       }
 
-      function onMouseUp() {
+      // Common end function for both mouse and touch
+      function onEnd() {
         isRotating = false;
       }
 
@@ -248,12 +297,30 @@
         document.getElementById('nextModel').addEventListener('click', nextModel);
         document.getElementById('prevModel').addEventListener('click', prevModel);
 
-        // Add mouse event listeners for free rotation
+        // Add click listener for shoe model zoom
+        document.getElementById('shoeModel').addEventListener('click', function() {
+          toggleZoom();
+        });
+
+        // Mouse event listeners for desktop
         const scene = document.querySelector('a-scene');
-        scene.addEventListener('mousedown', onMouseDown);
-        scene.addEventListener('mousemove', onMouseMove);
-        scene.addEventListener('mouseup', onMouseUp);
-        scene.addEventListener('mouseleave', onMouseUp);
+        scene.addEventListener('mousedown', onStart);
+        scene.addEventListener('mousemove', onMove);
+        scene.addEventListener('mouseup', onEnd);
+        scene.addEventListener('mouseleave', onEnd);
+
+        // Touch event listeners for mobile
+        scene.addEventListener('touchstart', onStart, { passive: false });
+        scene.addEventListener('touchmove', onMove, { passive: false });
+        scene.addEventListener('touchend', onEnd);
+        scene.addEventListener('touchcancel', onEnd);
+
+        // Prevent default touch actions
+        document.addEventListener('touchmove', function(event) {
+          if (isRotating) {
+            event.preventDefault();
+          }
+        }, { passive: false });
       });
     </script>
   </body>

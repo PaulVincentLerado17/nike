@@ -25,7 +25,7 @@
         top: 0;
         left: 0;
         width: 100%;
-        height: 100%;
+        height: 100%; 
         background-color: rgba(0,0,0,0.8);
         display: flex;
         flex-direction: column;
@@ -51,7 +51,7 @@
   <body>
     <div id="permission-overlay" style="display: none;">
       <h2>Nike Showroom</h2>
-      
+      <
       <button id="request-permission">Start Experience</button>
     </div>
 
@@ -76,7 +76,28 @@
         <img id="closeImg" src="icons/close.png" />
       </a-assets>
 
-      <a-entity id="shoe" position="-8 -1 -50">
+
+      <a-plane 
+      
+      color="#FFE5B4" 
+      height="35" 
+      width="25" 
+      position="0 1.4 -40" 
+      rotation="0 0 0"
+    >
+  </a-plane>
+
+  <a-plane 
+      
+  color="#353839" 
+  height="50" 
+  width="40" 
+  position="0 -20 -35" 
+  rotation="-100 0 0"
+>
+</a-plane>
+
+      <a-entity id="shoe" position="-8 -1 -40">
         <a-cylinder
           id="triggerCylinder"
           class="clickable"
@@ -174,14 +195,23 @@
           ></a-entity>
         </a-entity>
       </a-entity>
-
+      
+      <a-plane 
+      
+      color="#FFE5B4" 
+      height="28.5" 
+      width="25" 
+      position="8 1.4 -20" 
+      rotation="0 -90 0"
+    >
+  </a-plane>
       <a-plane 
         id="rightViewPlane"
         class="clickable"
         color="#CCC" 
         height="5" 
         width="3" 
-        position="5 2 -15" 
+        position="4.8 2 -15" 
         rotation="0 -90 0"
       >
         <a-image
@@ -200,14 +230,24 @@
           height="0.5"
         ></a-image>
       </a-plane>
+      
 
+      <a-plane 
+       
+        color="#F7E7CE" 
+        height="28.5" 
+      width="25" 
+      position="-8 1.4 -20"  
+        rotation="0 90 0"
+      >
+    </a-plane>
       <a-plane 
         id="leftViewPlane"
         class="clickable"
         color="#CCC" 
         height="5" 
         width="3" 
-        position="-5 2 -15" 
+        position="-4.8 2 -15" 
         rotation="0 90 0"
       >
         <a-image
@@ -269,7 +309,7 @@
       const rotationSpeed = 0.5;
       let isZoomed = false;
       const originalCameraPosition = { x: 0, y: 1.6, z: 0 };
-      const zoomedCameraPosition = { x: 0, y: 1.6, z: -30 };
+      const zoomedCameraPosition = { x: 0, y: 1.6, z: -20 };
       
       // New camera positions for right view
       const rightViewCameraPosition = { x: 0, y: 1.6, z: -15 };
